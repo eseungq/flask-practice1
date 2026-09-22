@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>프로필</title>
+</head>
+<body>
+    <h1>취미</h1>
+    <ul>
+        {% for hobby in hobbies %}
+        <li>{{ hobby }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
