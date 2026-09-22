@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
@@ -14,11 +14,6 @@ def about():
 def route_sample(text):
     return f"<h1>{text}</h1>"
 
-@app.route("/age/<num>")
-def age_any(num):
-    return f"<h1>{num} 살 - 타입은 {type(num).__name__}</h1>"
-
-@app.route("/age2/<int:num>")
-def age_int(num):
-    return f"<h1>{num} 살 - 타입은 {type(num).__name__}</h1>"
-
+@app.route("/hi/<name>")
+def h1_template_render(name):
+    return render_template("hi.html", name=name)
