@@ -10,3 +10,7 @@ def home():
 def profile():
     hobbies = ["음악 감상", "사진 촬영", "여행"]
     return render_template("profile.html", hobbies=hobbies)
+
+@app.route("/greet/<name>")
+def greet(name):
+    return render_template("greet.html", name=name)
