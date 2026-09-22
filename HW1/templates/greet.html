@@ -6,5 +6,8 @@
 </head>
 <body>
     <h1>안녕하세요, {{ name }}님</h1>
+    <a href="{{ url_for('home') }}">홈</a> |
+    <a href="{{ url_for('profile') }}">프로필</a> |
+    <a href="{{ url_for('greet', name='이승규') }}">인사</a>
 </body>
 </html>
