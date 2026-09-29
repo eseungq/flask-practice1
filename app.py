@@ -25,3 +25,8 @@ def h1_template_render(name):
 @app.route('/user/<username>')
 def show_user_profile(username):
     return f"User: {username}"
+
+@app.route('/blog/<int:year>/<int:month>/<int:day>')
+def show_blog_post(year, month, day):
+    # 월, 일은 2자리로 맞추기 위해 :02d 포맷을 사용합니다.
+    return f"Blog Post from: {year}-{month:02d}-{day:02d}"
