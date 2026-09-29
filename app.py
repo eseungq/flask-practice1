@@ -3,10 +3,10 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return f"<a href='/about'>소개로</a>"
+    return f"<a href='{url_for('about')}'>소개로</a>"
 
-@app.route('/info')
-def about_page():
+@app.route('/about')
+def about():
     return '소개 페이지'
 
 @app.route('/user/<username>')
