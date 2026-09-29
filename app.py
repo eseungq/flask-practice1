@@ -16,3 +16,14 @@ def profile(username):
 @app.route('/post/<int:pid>')
 def post(pid):
     return f'{pid}번 글 (자료형: {type(pid).__name__})'
+
+@app.route('/notes/')           # 끝에 슬래시
+def notes():
+    return '메모 목록'
+
+@app.route('/hello')            # 주소 둘을
+@app.route('/hello/<name>')     # 한 함수에
+def hello(name=None):           # 기본값이 있어야 합니다
+    if name:
+        return f'안녕하세요, {name} 님'
+    return '안녕하세요'
