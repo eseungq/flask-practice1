@@ -1,4 +1,4 @@
-from flask import Flask, url_for
+from flask import Flask, url_for, request
 app = Flask(__name__)
 
 @app.route('/')
@@ -27,3 +27,11 @@ def hello(name=None):           # 기본값이 있어야 합니다
     if name:
         return f'안녕하세요, {name} 님'
     return '안녕하세요'
+
+@app.route('/search')
+def search():
+    query = request.args.get('q', '')  # 쿼리 문자열을 가져옵니다
+    page = request.args.get('page', 1)
+    if not query:
+        return '검색어를 입력하세요'
+    return f'"{query}" 검색 결과 ({page} 페이지)'
