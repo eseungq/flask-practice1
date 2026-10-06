@@ -1,4 +1,4 @@
-from flask import Flask, url_for, request
+from flask import Flask, url_for, request, render_template
 app = Flask(__name__)
 
 @app.route('/')
@@ -20,13 +20,6 @@ def post(pid):
 @app.route('/notes/')           # 끝에 슬래시
 def notes():
     return '메모 목록'
-
-@app.route('/hello')            # 주소 둘을
-@app.route('/hello/<name>')     # 한 함수에
-def hello(name=None):           # 기본값이 있어야 합니다
-    if name:
-        return f'안녕하세요, {name} 님'
-    return '안녕하세요'
 
 @app.route('/search')
 def search():
@@ -59,9 +52,12 @@ def attach():
             return 'cherry 가 files 에 없습니다'
         return f'{f.filename} / {len(f.read())} 바이트'
     return '''
-    <form method="post"
-          enctype="multipart/form-data">
+    <form method="post">
       <input type="text" name="banana">
       <input type="file" name="cherry">
       <button type="submit">보내기</button>
     </form>'''
+
+@app.route('/hello/<name>')
+def hello(name=None):
+    return render_template('hello.html', name=name)
