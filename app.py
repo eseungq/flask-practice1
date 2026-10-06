@@ -11,7 +11,9 @@ def about():
 
 @app.route('/user/<username>')
 def profile(username):
-    return f'{username} 님의 프로필'
+    return render_template('profile.html', 
+                           username=username,
+                           post=['첫 글', '두 번째 글'])
 
 @app.route('/post/<int:pid>')
 def post(pid):
