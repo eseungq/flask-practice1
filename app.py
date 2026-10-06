@@ -63,3 +63,9 @@ def attach():
 @app.route('/hello/<name>')
 def hello(name=None):
     return render_template('hello.html', name=name)
+
+@app.route('/newuser/<username>')
+def new_user(username):
+    return render_template('profile.html',
+                           username=username,
+                           post=[])
