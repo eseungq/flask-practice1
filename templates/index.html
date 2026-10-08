@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Todo{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <input type="text" name="text" required>
+        <button type="submit">추가</button>
+    </form>
+    <ul>
+        {% for todo in todos %}
+            <li>{{ todo.id }}. {{ todo.text }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
