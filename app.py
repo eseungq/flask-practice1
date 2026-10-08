@@ -1,9 +1,27 @@
-from flask import Flask, url_for, request, render_template
+from flask import Flask, url_for, request, render_template, redirect
+from flask_sqlalchemy import SQLAlchemy
+
 app = Flask(__name__)
 
-@app.route('/')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///todo.db'
+db = SQLAlchemy(app)
+
+class Todo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String(100), nullable=False)
+    done = db.Column(db.Boolean, default=False)
+
+    def __repr__(self):
+        return f'<Todo {self.id} {self.text}>'
+
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return f"<a href='{url_for('about')}'>소개로</a>"
+    if request.method == 'POST':
+        new_todo = Todo(text=request.form['text'])
+        db.session.add(new_todo)
+        db.session.commit()
+        return redirect(url_for('index'))
+    return render_template('index.html', todos=Todo.query.all())
 
 @app.route('/about')
 def about():
@@ -69,3 +87,6 @@ def new_user(username):
     return render_template('profile.html',
                            username=username,
                            post=[])
+
+with app.app_context():
+    db.create_all()
