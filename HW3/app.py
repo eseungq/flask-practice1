@@ -42,7 +42,7 @@ def delete(id):
 
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
-    todo = db.get_or_404
+    todo = db.get_or_404(Todo, id)
     if request.method == 'POST':
         # text와 note를 고치고 commit 한 뒤 목록으로
         todo.text = request.form['todo']
