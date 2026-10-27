@@ -43,6 +43,19 @@ def delete(id):
     db.session.commit()
     return redirect(url_for('index'))
 
+# ---------------------------------------------------------------- API
+# Blueprint 로 한 번 감싸고 거기에 Api 를 붙입니다.
+# 이렇게 해야 /api 아래에서만 JSON 이 나오고, 위의 화면 라우트는 그대로 남습니다.
+api_bp = Blueprint("api", __name__, url_prefix="/api")
+api = Api(
+    api_bp,
+    version="1.0",
+    title="Todo API",
+    description="4장에서 만든 todo 앱의 API",
+    doc="/docs",                          # 문서는 /api/docs 에 열립니다
+)
+ns = api.namespace("todos", description="할 일 하나하나를 다루는 곳")
+
 if __name__ == '__main__':
     app.run(debug=True)
 
