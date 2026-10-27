@@ -123,6 +123,27 @@ class TodoItem(Resource):
         db.session.commit()
         return todo
 
+    @ns.doc("지우기")
+    @ns.response(204, "지웠습니다. 돌려줄 내용이 없습니다")
+    def delete(self, id):
+        """할 일 하나를 지운다"""
+        todo = get_or_abort(id)
+        db.session.delete(todo)
+        db.session.commit()
+        return "", 204
+
+
+def get_or_abort(id):
+    """없는 번호면 404 를 JSON 으로 돌려준다."""
+    todo = db.session.get(Todo, id)
+    if todo is None:
+        # abort 에 넘긴 글자가 그대로 JSON 의 message 가 됩니다.
+        ns.abort(404, f"{id}번 할 일이 없습니다")
+    return todo
+
+
+app.register_blueprint(api_bp)
+
 if __name__ == '__main__':
     app.run(debug=True)
 
