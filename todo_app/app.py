@@ -99,6 +99,30 @@ class TodoItem(Resource):
         """할 일 하나를 돌려준다"""
         return get_or_abort(id)
 
+    @ns.doc("통째로 바꾸기")
+    @ns.expect(todo_input, validate=True)
+    @ns.marshal_with(todo_model)
+    def put(self, id):
+        """할 일 하나를 통째로 바꾼다. 보내지 않은 칸은 기본값이 된다"""
+        todo = get_or_abort(id)
+        todo.text = api.payload["text"]
+        todo.done = api.payload.get("done", False)
+        db.session.commit()
+        return todo
+
+    @ns.doc("일부만 바꾸기")
+    @ns.expect(todo_input)
+    @ns.marshal_with(todo_model)
+    def patch(self, id):
+        """보낸 칸만 바꾼다. 완료 표시를 뒤집을 때 쓴다"""
+        todo = get_or_abort(id)
+        if "text" in api.payload:
+            todo.text = api.payload["text"]
+        if "done" in api.payload:
+            todo.done = api.payload["done"]
+        db.session.commit()
+        return todo
+
 if __name__ == '__main__':
     app.run(debug=True)
 
