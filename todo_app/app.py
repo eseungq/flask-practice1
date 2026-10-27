@@ -56,6 +56,19 @@ api = Api(
 )
 ns = api.namespace("todos", description="할 일 하나하나를 다루는 곳")
 
+# 주고받을 데이터의 모양입니다. 이것이 곧 문서가 됩니다.
+todo_model = api.model("Todo", {
+    "id": fields.Integer(readonly=True, description="줄 번호. 서버가 붙입니다"),
+    "text": fields.String(required=True, description="할 일 글자", example="우유 사기"),
+    "done": fields.Boolean(description="완료 여부", example=False),
+})
+
+# 만들 때와 바꿀 때 받을 것. id 는 받지 않습니다.
+todo_input = api.model("TodoInput", {
+    "text": fields.String(required=True, description="할 일 글자", example="우유 사기"),
+    "done": fields.Boolean(description="완료 여부", example=False),
+})
+
 if __name__ == '__main__':
     app.run(debug=True)
 
