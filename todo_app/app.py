@@ -69,6 +69,26 @@ todo_input = api.model("TodoInput", {
     "done": fields.Boolean(description="완료 여부", example=False),
 })
 
+@ns.route("/")
+class TodoList(Resource):
+    @ns.doc("목록 보기")
+    @ns.marshal_list_with(todo_model)
+    def get(self):
+        """할 일을 전부 돌려준다"""
+        return Todo.query.all()
+
+    @ns.doc("새로 만들기")
+    @ns.expect(todo_input, validate=True)
+    @ns.marshal_with(todo_model, code=201)
+    def post(self):
+        """할 일을 하나 만든다"""
+        todo = Todo(text=api.payload["text"],
+                    done=api.payload.get("done", False))
+        db.session.add(todo)
+        db.session.commit()
+        # 만들었으면 201 과 함께 그것이 어디 있는지 Location 에 적어 줍니다.
+        return todo, 201, {"Location": f"/api/todos/{todo.id}"}
+
 if __name__ == '__main__':
     app.run(debug=True)
 
