@@ -4,7 +4,7 @@ from flask_restx import Api, Resource, fields
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://flask_user:password@localhost/flask_todo_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///todo.db'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # 404 에 "did you mean ...?" 라는 긴 안내가 따라붙는 것을 끕니다.
 app.config["ERROR_404_HELP"] = False
