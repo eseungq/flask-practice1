@@ -61,3 +61,35 @@ class TodoApiTest(unittest.TestCase):
         made = self.client.post("/api/todos/", json={"text": "지울 것"}).get_json()
         self.assertEqual(self.client.delete(f"/api/todos/{made['id']}").status_code, 204)
         self.assertEqual(self.client.get(f"/api/todos/{made['id']}").status_code, 404)
+
+    def test_note_는_그대로_돌아오고_안_보내면_빈_글자다(self):
+        r = self.client.post("/api/todos/", json={"text": "우유 사기", "note": "2리터짜리로"})
+        self.assertEqual(r.status_code, 201)
+        self.assertEqual(r.get_json()["note"], "2리터짜리로")
+        r = self.client.post("/api/todos/", json={"text": "책 반납"})
+        self.assertEqual(r.status_code, 201)
+        self.assertEqual(r.get_json()["note"], "")           # 안 보내면 빈 글자
+
+    def test_patch_로_note_만_바꿔도_text_는_그대로다(self):
+        made = self.client.post("/api/todos/", json={"text": "우유 사기", "note": "2리터짜리로"}).get_json()
+        r = self.client.patch(f"/api/todos/{made['id']}", json={"note": "4리터짜리로"})
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.get_json()["note"], "4리터짜리로")
+        self.assertEqual(r.get_json()["text"], "우유 사기")
+
+    def test_done_으로_걸러_받는다(self):
+        a = self.client.post("/api/todos/", json={"text": "우유 사기"}).get_json()
+        self.client.post("/api/todos/", json={"text": "책 반납"})
+        self.client.patch(f"/api/todos/{a['id']}", json={"done": True})
+        done = self.client.get("/api/todos/?done=true")
+        self.assertEqual([t["text"] for t in done.get_json()], ["우유 사기"])
+        undone = self.client.get("/api/todos/?done=false")
+        self.assertEqual([t["text"] for t in undone.get_json()], ["책 반납"])
+
+    def test_done_을_안_붙이면_전부_나온다(self):
+        a = self.client.post("/api/todos/", json={"text": "우유 사기"}).get_json()
+        self.client.post("/api/todos/", json={"text": "책 반납"})
+        self.client.patch(f"/api/todos/{a['id']}", json={"done": True})
+        r = self.client.get("/api/todos/")
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(len(r.get_json()), 2)               # 69쪽처럼 하나만 오면 안 된다
