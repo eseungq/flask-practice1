@@ -89,6 +89,16 @@ class TodoList(Resource):
         # 만들었으면 201 과 함께 그것이 어디 있는지 Location 에 적어 줍니다.
         return todo, 201, {"Location": f"/api/todos/{todo.id}"}
 
+@ns.route("/<int:id>")
+@ns.param("id", "할 일의 줄 번호")
+@ns.response(404, "그 번호의 할 일이 없습니다")
+class TodoItem(Resource):
+    @ns.doc("하나 보기")
+    @ns.marshal_with(todo_model)
+    def get(self, id):
+        """할 일 하나를 돌려준다"""
+        return get_or_abort(id)
+
 if __name__ == '__main__':
     app.run(debug=True)
 
